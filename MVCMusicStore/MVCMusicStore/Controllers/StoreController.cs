@@ -2,33 +2,45 @@
 using System.Web;
 using MVCMusicStore.Models;
 using System.Collections.Generic;
+using MVCMusicStore.Data;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace MVCMusicStore.Controllers
 {
     public class StoreController : Controller
     {
+        private readonly StoreDbContext storeDbContext;
+
+        public StoreController(StoreDbContext storeDbContext)
+        {
+            this.storeDbContext = storeDbContext;
+        }
+
         public IActionResult Index()
         {
-            var genres = new List<Genre>
-            {
-                new Genre {Name = "Disco" },
-                new Genre {Name = "Jazz" },
-                new Genre {Name = "Rock" }
-            };
+            var genres = storeDbContext.Genres.ToList();
 
             return View(genres);
         }
 
-        public ActionResult Details(int id)
+        public IActionResult Details(int id)
         {
-            var album = new Album { Title = $"Album {id}" };
+            var album = storeDbContext.Albums.Find(id);
+
+            if (album is null)
+            {
+                return NotFound();
+            }
 
             return View(album);
         }
 
-        public ActionResult Browse(string genre)
+        public IActionResult Browse(string genre)
         {
-            var genreModel = new Genre { Name = $"{genre}" };
+            var genreModel = storeDbContext.Genres.Include("Albums")
+                .Single(g => g.Name == genre);
+
             return View(genreModel);
         }
 
