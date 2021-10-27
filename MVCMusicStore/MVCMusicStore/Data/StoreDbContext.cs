@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MVCMusicStore.Models;
 
 namespace MVCMusicStore.Data
 {
-    public class StoreDbContext : DbContext
+    public class StoreDbContext : IdentityDbContext
     {
         public StoreDbContext(DbContextOptions options) : base(options)
         {

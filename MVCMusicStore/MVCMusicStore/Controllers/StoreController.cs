@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Web;
-using MVCMusicStore.Models;
-using System.Collections.Generic;
 using MVCMusicStore.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVCMusicStore.Controllers
 {
+    [Authorize]
     public class StoreController : Controller
     {
         private readonly StoreDbContext storeDbContext;

@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +28,11 @@ namespace MVCMusicStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<StoreDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("Store")));
+            services.AddDbContext<StoreDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Store")));
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<StoreDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
         }
@@ -49,6 +55,7 @@ namespace MVCMusicStore
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
