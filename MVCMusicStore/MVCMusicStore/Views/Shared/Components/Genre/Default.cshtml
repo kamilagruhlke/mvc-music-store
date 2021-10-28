@@ -1,0 +1,24 @@
+﻿@model List<MVCMusicStore.Models.Genre>
+
+@{
+    ViewBag.Title = "Genre Menu";
+}
+
+<ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
+    <li class="nav-item">
+        <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-decoration-none">
+            <span class="fs-5 d-none d-sm-inline">Genre Menu</span>
+        </a>
+    </li>
+
+    @foreach (var genre in Model)
+    {
+        <li class="nav-item">
+            @Html.ActionLink(genre.Name, "Browse", "Store", new { Genre = genre.Name }, new { @class = "nav-link align-middle px-0" })
+        </li>
+    }
+</ul>
+
+<ul id="categories">
+
+</ul>

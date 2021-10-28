@@ -26,7 +26,11 @@ namespace MVCMusicStore.Controllers
 
         public IActionResult Details(int id)
         {
-            var album = storeDbContext.Albums.Find(id);
+            var album = storeDbContext.Albums
+                .Include(e => e.Genre)
+                .ThenInclude(e => e.Albums)
+                .ThenInclude(e => e.Artist)
+                .FirstOrDefault(e => e.AlbumId == id);
 
             if (album is null)
             {

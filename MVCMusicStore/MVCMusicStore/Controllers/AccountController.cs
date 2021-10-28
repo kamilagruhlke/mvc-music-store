@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MVCMusicStore.Data;
+using MVCMusicStore.Models;
 using MVCMusicStore.ViewModels;
 using System.Threading.Tasks;
 
@@ -10,6 +13,7 @@ namespace MVCMusicStore.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly StoreDbContext storeDbContext;
 
         public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
@@ -87,6 +91,14 @@ namespace MVCMusicStore.Controllers
             await _signInManager.SignOutAsync();
 
             return RedirectToAction("Login");
+        }
+
+        private void MigrateShoppingCart(string UserName)
+        {
+            // Associate shopping cart items with logged-in user
+            var cart = ShoppingCart.GetCart(this.HttpContext, storeDbContext);
+            cart.MigrateCart(UserName);
+            HttpContext.Session.SetString(ShoppingCart.CartSessionKey, UserName);
         }
     }
 }
